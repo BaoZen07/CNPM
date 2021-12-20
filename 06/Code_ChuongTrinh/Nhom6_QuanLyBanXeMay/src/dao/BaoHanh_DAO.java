@@ -10,6 +10,7 @@ import java.util.List;
 
 import dbconnection.DatabaseConnection;
 import entity.BaoHanh;
+import entity.KhachHang;
 
 
 public class BaoHanh_DAO {
@@ -90,8 +91,8 @@ public class BaoHanh_DAO {
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setString(1, bh.getMaBH());
 			stmt.setString(2, bh.getMaXe());
-			stmt.setString(4, bh.getTenxe());
-			stmt.setString(3, bh.getThongtinBH());			
+			stmt.setString(3, bh.getTenxe());
+			stmt.setString(4, bh.getThongtinBH());			
 			int n = stmt.executeUpdate();
 			if(n > 0) {
 				con.close();
@@ -99,7 +100,6 @@ public class BaoHanh_DAO {
 			}
 			con.close();	
 			return false;
-		
 	}
 	
 	public ArrayList<BaoHanh> layDanhSach() {
@@ -109,14 +109,6 @@ public class BaoHanh_DAO {
 	@Override
 	public String toString() {
 		return "DanhSachBaoHanh [dsBH=" + dsBH + "]";
-	}
-	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	public BaoHanh get(int rows) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 }

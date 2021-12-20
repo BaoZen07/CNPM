@@ -7,8 +7,10 @@ public class BaoHanh {
 	private String MaXe;
 	private String Tenxe;
 	private String ThongtinBH;
+	
 	public BaoHanh() {
 	}
+	
 	public BaoHanh(String maBH) {
 		this.MaBH = maBH;
 	}

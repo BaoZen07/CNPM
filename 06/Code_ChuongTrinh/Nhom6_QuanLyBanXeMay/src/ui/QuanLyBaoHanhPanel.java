@@ -46,7 +46,7 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextField txtMa;
+	private JTextField txtMaBH;
 	private JTextField txtMaxe;
 	private JTextField txtTenxe;
 	private JTextField txtThongtinBH;
@@ -88,8 +88,8 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 		JLabel lblMa = new JLabel("Mã bảo hành");
 		box1.add(lblMa);
 		box1.add(Box.createHorizontalStrut(10));
-		txtMa = new JTextField();
-		box1.add(txtMa);
+		txtMaBH = new JTextField();
+		box1.add(txtMaBH);
 		box1.add(Box.createHorizontalStrut(20));
 		JLabel lblMaxe = new JLabel("Mã xe");
 		box1.add(lblMaxe);
@@ -103,14 +103,14 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 		box2.add(Box.createHorizontalStrut(20));
 		JLabel lblTenxe = new JLabel("Tên xe");
 		box2.add(lblTenxe);
-		box2.add(Box.createHorizontalStrut(30));
+		box2.add(Box.createHorizontalStrut(20));
 		txtTenxe = new JTextField();
 		box2.add(txtTenxe);
 		
 		box2.add(Box.createHorizontalStrut(20));
 		JLabel lblThongtinBH = new JLabel("Thông tin BH");
 		box2.add(lblThongtinBH);
-		box2.add(Box.createHorizontalStrut(50));
+		box2.add(Box.createHorizontalStrut(20));
 		txtThongtinBH = new JTextField();
 		box2.add(txtThongtinBH);
 		
@@ -123,9 +123,9 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 		Box boxCenter = Box.createHorizontalBox();
 
 		String[] header = { "Mã bảo hành", "Mã xe", "Tên xe", "Thông tin bảo hành" };
-		modelBaoHanh = new DefaultTableModel(header, 0);
+		modelBaoHanh = new DefaultTableModel(header, 5);
 		tableBaoHanh = new JTable(modelBaoHanh);
-//		tableBaohanh.setRowHeight(25);
+		tableBaoHanh.setRowHeight(25);
 		tableBaoHanh.setFont(NORMAL_FONT);
 		JScrollPane pane = new JScrollPane(tableBaoHanh);
 
@@ -171,7 +171,7 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 
 		// set font
 		lblMa.setFont(NORMAL_FONT);
-		txtMa.setFont(NORMAL_FONT);
+		txtMaBH.setFont(NORMAL_FONT);
 		lblMaxe.setFont(NORMAL_FONT);
 		txtMaxe.setFont(NORMAL_FONT);
 		lblTenxe.setFont(NORMAL_FONT);
@@ -265,7 +265,7 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 	
 	
 	private void xoaRong() {
-		txtMa.setText("");
+		txtMaBH.setText("");
 		txtMaxe.setText("");
 		txtTenxe.setText("");
 		txtThongtinBH.setText("");
@@ -280,12 +280,12 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 		if(row == - 1)
 			JOptionPane.showMessageDialog(this, "Chọn phiếu bảo hành cần sửa");
 		else {
-			String MaBH = txtMa.getText().trim();
+			String MaBH = txtMaBH.getText().trim();
 			String MaXe = txtMaxe.getText().trim();
 			String Tenxe = txtTenxe.getText().trim();
 			String ThongtinBH = txtThongtinBH.getText().trim();
 			BaoHanh bh = new BaoHanh(MaBH,MaXe,Tenxe,ThongtinBH);
-			if(!bh.getMaBH().equalsIgnoreCase(tableBaoHanh.getValueAt(row, 1).toString()))
+			if(!bh.getMaBH().equalsIgnoreCase(tableBaoHanh.getValueAt(row, 0).toString()))
 				JOptionPane.showMessageDialog(this, "Không được sửa mã bảo hành!!");
 			else {
 				if(dsBH.suaTTBH(bh)) {
@@ -294,13 +294,10 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 				}
 				else
 					JOptionPane.showMessageDialog(this, "Sửa không thành công");
-			}
-			
-			
-		}
-		
+			}			
+		}	
 	}
-
+	
 	private void xoaBaoHanh() throws SQLException {
 		int row = tableBaoHanh.getSelectedRow();
 		if(row == -1)
@@ -309,9 +306,10 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 			int replay = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa dòng này ?",
 					"Cảnh báo",JOptionPane.YES_NO_OPTION);
 			if(replay == JOptionPane.YES_OPTION) {
+				List<BaoHanh> dsbh = dsBH.getAll();
 				int rows = tableBaoHanh.getSelectedRow();
-				if(rows >= 0 || rows < dsBH.size()) {
-					BaoHanh bh = dsBH.get(rows);
+				if(rows >= 0 || rows < dsbh.size()) {
+					BaoHanh bh = dsbh.get(rows);
 					if(dsBH.xoaBaoHanh(bh)) {
 						loadDataToTable();
 						xoaTrang();
@@ -326,7 +324,7 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 
 	private void themBaoHanh() { 
 		if(validData()) {
-			String MaBH = txtMa.getText().trim();
+			String MaBH = txtMaBH.getText().trim();
 			String MaXe = txtMaxe.getText().trim();
 			String Tenxe = txtTenxe.getText().trim();
 			String ThongtinBH = txtThongtinBH.getText().trim();
@@ -348,16 +346,16 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 	}
 
 	private void xoaTrang() {
-		txtMa.setText("");
+		txtMaBH.setText("");
 		txtMaxe.setText("");
 		txtTenxe.setText("");
 		txtThongtinBH.setText("");
 		
 	}
 
-	public void mouseClicked1(MouseEvent e) {
+	public void mouseClicked(MouseEvent e) {
 		int row = tableBaoHanh.getSelectedRow();
-		txtMa.setText(tableBaoHanh.getValueAt(row, 1).toString());
+		txtMaBH.setText(tableBaoHanh.getValueAt(row, 1).toString());
 		txtMaxe.setText(tableBaoHanh.getValueAt(row, 2).toString());
 		txtTenxe.setText(tableBaoHanh.getValueAt(row, 3).toString());
 		txtThongtinBH.setText(tableBaoHanh.getValueAt(row, 4).toString());
@@ -388,19 +386,8 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 		
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void actionPerformed1(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	private boolean validData() {
-		String MaBH = txtMa.getText().trim();
+		String MaBH = txtMaBH.getText().trim();
 		String MaXe = txtMaxe.getText().trim();
 		String Tenxe= txtTenxe.getText().trim();
 		String ThongtinBH = txtThongtinBH.getText().trim();
@@ -428,7 +415,7 @@ public class QuanLyBaoHanhPanel extends JPanel implements ActionListener,MouseLi
 		return true;
 	}
 	public void setPopupMenu(JPopupMenu popup) {
-		txtMa.setComponentPopupMenu(popup);
+		txtMaBH.setComponentPopupMenu(popup);
 		txtMaxe.setComponentPopupMenu(popup);
 		txtTenxe.setComponentPopupMenu(popup);
 		txtThongtinBH.setComponentPopupMenu(popup);
